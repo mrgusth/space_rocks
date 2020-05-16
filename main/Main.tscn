@@ -1,0 +1,68 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/Main.gd" type="Script" id=2]
+[ext_resource path="res://assets/space_background.png" type="Texture" id=3]
+[ext_resource path="res://rock/Rock.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://enemy/Enemy.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/sounds/Funky-Gameplay_Looping.ogg" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/flight_sound.ogg" type="AudioStream" id=8]
+[ext_resource path="res://assets/sounds/synthetic_thunder_short.wav" type="AudioStream" id=9]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -864, -472, 0, 0, 0, 0, 856, -472, 0, 0, 0, 0, 856, 480, 0, 0, 0, 0, -864, 480, 0, 0, 0, 0, -864, -472 )
+}
+
+[node name="Main" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 2 )
+Rock = ExtResource( 4 )
+Enemy = ExtResource( 6 )
+
+[node name="background" type="Sprite" parent="."]
+position = Vector2( 435.2, 209.563 )
+scale = Vector2( 0.6, 0.651852 )
+texture = ExtResource( 3 )
+offset = Vector2( 128, 128 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+pause_mode = 1
+
+[node name="RockPath" type="Path2D" parent="."]
+curve = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="RockSpawn" type="PathFollow2D" parent="RockPath"]
+position = Vector2( -864, -472 )
+
+[node name="Rocks" type="Node" parent="." groups=[
+"rocks",
+]]
+pause_mode = 1
+
+[node name="HUD" parent="." instance=ExtResource( 5 )]
+pause_mode = 1
+
+[node name="EnemyTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ExplodeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+volume_db = -10.0
+
+[node name="LevelupSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
+volume_db = -5.0
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+[connection signal="dead" from="Player" to="." method="game_over"]
+[connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
+[connection signal="shield_changed" from="Player" to="HUD" method="update_shield"]
+[connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_EnemyTimer_timeout"]

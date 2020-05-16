@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 763.194, 101.304, 0, 0, 0, 0, 756.732, 636.338, 0, 0, 0, 0, 1674.3, 632.461, 0, 0, 0, 0, 1671.72, 101.304, 0, 0, 0, 0, 763.194, 101.304, 0, 0, 0, 0, 764.486, 100.011, 0, 0, 0, 0, 763.194, 98.719 )
+}
+
+[node name="EnemyPaths" type="Node2D"]
+position = Vector2( -4.6737, -10.5407 )
+
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2( -715.066, -65.1393 )
+curve = SubResource( 1 )
